@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "nerdit_try_plugin",
-      "description": "Multi-agent NERDIT LMS chapter lesson generator: HTML lessons, durations, and quiz questions from input_[chaptername]_structure.json.",
+      "description": "Multi-agent NERDIT LMS course generator: course object with assessment bank plus per-lesson HTML, durations, and quiz questions from course-[chaptername]_input.json.",
       "source": "./",
       "category": "education"
     }
