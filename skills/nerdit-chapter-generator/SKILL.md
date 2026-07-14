@@ -302,13 +302,27 @@ If any check fails, fix the issue before producing the output files.
 
 Two files must be produced and delivered for every run.
 
+> **Never write output into this plugin's own folder** (the `nerdit-chapter-generator` skill
+> directory, its `references/`, or anywhere under the plugin install). The plugin folder is
+> read-only source — do not add generated files to it.
+>
+> **Decide the destination with the user — do not pick a location on your own:**
+> 1. First ask the user where to save the two output files (a directory path they choose), and
+>    write both files there.
+> 2. If the user has no preference or wants a quick preview, offer to **display the output and
+>    provide a download** instead of writing to disk — render the JSON (and/or the HTML preview)
+>    as a downloadable Artifact / file the user can save wherever they like.
+> 3. Only fall back to a session scratch/temp directory (never the plugin folder) if the user
+>    explicitly declines both — and tell them the exact path you used.
+
 ### 5a. Output JSON file
 
 1. Determine the chapter name from the input filename
    (e.g., `course-numpy-fundamentals_input.json` → chapter name is `numpy-fundamentals`).
 2. Name the output JSON file: `course-[chaptername]_output.json`
    (e.g., `course-numpy-fundamentals_output.json`).
-3. Write it to `/mnt/user-data/outputs/course-[chaptername]_output.json`.
+3. Save it to the user-chosen destination from the Step 5 preamble above (or present it for
+   download). Do not hard-code a path, and do not write it into the plugin folder.
 
 ### 5b. Pure HTML preview file
 
@@ -394,20 +408,23 @@ Map `correctOptionIndex` → letter: 0 = A, 1 = B, 2 = C, 3 = D.
 **Naming:** `content_[chaptername]_lessons.html`
 (e.g., `content_numpy-fundamentals_lessons.html`)
 
-**Write to:** `/mnt/user-data/outputs/content_[chaptername]_lessons.html`
+**Save to:** the same user-chosen destination as the JSON file (or present it for download).
+Do not hard-code a path, and do not write it into the plugin folder.
 
-### 5c. Present both files
+### 5c. Deliver both files
 
-Call `present_files` with both file paths so the user can download either:
+Deliver the two files by the method chosen with the user in the Step 5 preamble:
 
-```
-present_files([
-  "/mnt/user-data/outputs/course-[chaptername]_output.json",
-  "/mnt/user-data/outputs/content_[chaptername]_lessons.html"
-])
-```
+- **User picked a destination** → confirm both files are written there and print the two full
+  paths so the user can locate them.
+- **User wanted preview/download** → present both files for download (e.g. as downloadable
+  Artifacts / attachments) without writing them to the plugin folder.
 
-After presenting, provide a brief summary listing:
+On a hosted environment that provides `present_files`, call it with both saved file paths so
+the user can download either. On the CLI, just report the destination paths (or provide the
+downloadable files).
+
+After delivering, provide a brief summary listing:
 - Number of lessons processed
 - Lesson titles generated
 - Total question counts (lesson-level total and `assessment.questions` total)
