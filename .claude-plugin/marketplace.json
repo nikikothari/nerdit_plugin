@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nerdit-plugin",
+  "description": "Marketplace for the NERDIT LMS multi-agent chapter lesson generator plugin.",
+  "owner": {
+    "name": "Niki Bhogar",
+    "url": "https://github.com/nikikothari"
+  },
+  "plugins": [
+    {
+      "name": "nerdit_try_plugin",
+      "description": "Multi-agent NERDIT LMS chapter lesson generator: HTML lessons, durations, and quiz questions from input_[chaptername]_structure.json.",
+      "source": "./",
+      "category": "education"
+    }
+  ]
+}

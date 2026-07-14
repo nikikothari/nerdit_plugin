@@ -1,0 +1,13 @@
+{
+  "name": "nerdit_try_plugin",
+  "version": "2.0.0",
+  "description": "Multi-agent NERDIT LMS chapter lesson generator. Orchestrates nerdit-lesson-writer, nerdit-quiz-writer, and nerdit-qa-validator subagents to turn input_[chaptername]_structure.json files into fully generated output_[chaptername]_structure.json (HTML + duration + quiz questions).",
+  "author": {
+    "name": "Niki Bhogar",
+    "url": "https://github.com/nikikothari"
+  },
+  "homepage": "https://github.com/nikikothari/nerdit_plugin",
+  "repository": "https://github.com/nikikothari/nerdit_plugin",
+  "license": "MIT",
+  "keywords": ["nerdit", "lms", "lesson-generator", "multi-agent", "education"]
+}
