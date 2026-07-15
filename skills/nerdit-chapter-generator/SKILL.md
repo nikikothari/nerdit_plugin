@@ -291,27 +291,25 @@ failures, fix the specific lesson(s) or top-level field(s) by re-running that le
 - [ ] `lessonIds` length == `lessons.length`, values equal each lesson's `id` in the same order
 - [ ] The output JSON is syntactically valid (no trailing commas, no unescaped special characters)
 - [ ] No extra or missing top-level fields; no extra or missing lesson-level fields
-- [ ] The pure HTML file contains all lesson content fragments plus quiz sections in order
-- [ ] The HTML file has no `<link>`, `<style>`, or injected CSS of any kind
 
-If any check fails, fix the issue before producing the output files.
+If any check fails, fix the issue before producing the output file.
 
 ---
 
-## Step 5 — Deliver Output Files
+## Step 5 — Deliver Output File
 
-Two files must be produced and delivered for every run.
+One file is produced and delivered per run: the output JSON.
 
 > **Never write output into this plugin's own folder** (the `nerdit-chapter-generator` skill
 > directory, its `references/`, or anywhere under the plugin install). The plugin folder is
 > read-only source — do not add generated files to it.
 >
 > **Decide the destination with the user — do not pick a location on your own:**
-> 1. First ask the user where to save the two output files (a directory path they choose), and
->    write both files there.
+> 1. First ask the user where to save the output file (a directory path they choose), and
+>    write it there.
 > 2. If the user has no preference or wants a quick preview, offer to **display the output and
->    provide a download** instead of writing to disk — render the JSON (and/or the HTML preview)
->    as a downloadable Artifact / file the user can save wherever they like.
+>    provide a download** instead of writing to disk — render the JSON as a downloadable
+>    Artifact / file the user can save wherever they like.
 > 3. Only fall back to a session scratch/temp directory (never the plugin folder) if the user
 >    explicitly declines both — and tell them the exact path you used.
 
@@ -324,105 +322,18 @@ Two files must be produced and delivered for every run.
 3. Save it to the user-chosen destination from the Step 5 preamble above (or present it for
    download). Do not hard-code a path, and do not write it into the plugin folder.
 
-### 5b. Pure HTML preview file
+### 5b. Deliver the file
 
-Produce a second file that contains only the raw HTML lesson content — no CSS, no
-`<link>` tags, no `<style>` blocks, no design or styling of any kind.
+Deliver the file by the method chosen with the user in the Step 5 preamble:
 
-**Purpose:** This file is a portable, plain HTML export of the lesson content fragment
-exactly as it would be stored in each lesson's `content` field — ready for inspection,
-diffing, or use in external tooling.
+- **User picked a destination** → confirm the file is written there and print the full
+  path so the user can locate it.
+- **User wanted preview/download** → present the file for download (e.g. as a downloadable
+  Artifact / attachment) without writing it to the plugin folder.
 
-**Construction rules:**
-- For each lesson in the chapter, append that lesson's own `questions` (the 3 lesson-level
-  questions) as a quiz section immediately after the `content` HTML fragment. The
-  `assessment`-level questions are a separate final-exam pool and are not rendered per-lesson
-  in this preview file.
-- The quiz section for each lesson is a plain HTML block listing all 3 lesson-level questions
-  and their options (see format below).
-- Concatenate all lessons (content + quiz block) in input order, separated by a single blank line.
-- Wrap the entire concatenated output in a minimal HTML document shell:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[chaptername] — NERDIT Lesson Content</title>
-</head>
-<body>
-[concatenated content fragments here]
-</body>
-</html>
-```
-
-**Quiz HTML block format** (append after each lesson's content fragment):
-
-```html
-<section class="nerdit-quiz-section">
-  <h2>Knowledge Check</h2>
-
-  <div class="nerdit-quiz-question">
-    <p><strong>Q1.</strong> [question 1 text]</p>
-    <ol type="A">
-      <li>[option 0]</li>
-      <li>[option 1]</li>
-      <li>[option 2]</li>
-      <li>[option 3]</li>
-    </ol>
-    <p><em>Correct answer: [A/B/C/D] — [correct option text]</em></p>
-  </div>
-
-  <div class="nerdit-quiz-question">
-    <p><strong>Q2.</strong> [question 2 text]</p>
-    <ol type="A">
-      <li>[option 0]</li>
-      <li>[option 1]</li>
-      <li>[option 2]</li>
-      <li>[option 3]</li>
-    </ol>
-    <p><em>Correct answer: [A/B/C/D] — [correct option text]</em></p>
-  </div>
-
-  <div class="nerdit-quiz-question">
-    <p><strong>Q3.</strong> [question 3 text]</p>
-    <ol type="A">
-      <li>[option 0]</li>
-      <li>[option 1]</li>
-      <li>[option 2]</li>
-      <li>[option 3]</li>
-    </ol>
-    <p><em>Correct answer: [A/B/C/D] — [correct option text]</em></p>
-  </div>
-</section>
-```
-
-Map `correctOptionIndex` → letter: 0 = A, 1 = B, 2 = C, 3 = D.
-
-- Do NOT add `<link rel="stylesheet">`, `<style>`, inline CSS, or any external script
-  tags beyond those already present inside the `content` fragments themselves (e.g.,
-  Chart.js scripts that are part of the lesson content are kept as-is).
-- Do NOT modify the content fragments in any way — paste them verbatim.
-
-**Naming:** `content_[chaptername]_lessons.html`
-(e.g., `content_numpy-fundamentals_lessons.html`)
-
-**Save to:** the same user-chosen destination as the JSON file (or present it for download).
-Do not hard-code a path, and do not write it into the plugin folder.
-
-### 5c. Deliver both files
-
-Deliver the two files by the method chosen with the user in the Step 5 preamble:
-
-- **User picked a destination** → confirm both files are written there and print the two full
-  paths so the user can locate them.
-- **User wanted preview/download** → present both files for download (e.g. as downloadable
-  Artifacts / attachments) without writing them to the plugin folder.
-
-On a hosted environment that provides `present_files`, call it with both saved file paths so
-the user can download either. On the CLI, just report the destination paths (or provide the
-downloadable files).
+On a hosted environment that provides `present_files`, call it with the saved file path so
+the user can download it. On the CLI, just report the destination path (or provide the
+downloadable file).
 
 After delivering, provide a brief summary listing:
 - Number of lessons processed

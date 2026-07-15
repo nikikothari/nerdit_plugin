@@ -17,9 +17,9 @@ Given one topic (`id`, `title`, `description`) and a chapter theme, produce:
 
 ## Step 0 — Read references first, every time
 
-Read both, in full, before writing anything:
-- `${CLAUDE_PLUGIN_ROOT}/skills/nerdit-chapter-generator/references/NERDIT_LESSON_PROMPT_v8.md` — component catalogue, exact markup, writing rules
-- `${CLAUDE_PLUGIN_ROOT}/skills/nerdit-chapter-generator/references/css8.css` — grep for exact class names when unsure of markup a component expects
+Before writing anything:
+- Read `${CLAUDE_PLUGIN_ROOT}/skills/nerdit-chapter-generator/references/NERDIT_LESSON_PROMPT_v8.md` in full — component catalogue, exact markup, writing rules
+- Do **not** read `${CLAUDE_PLUGIN_ROOT}/skills/nerdit-chapter-generator/references/css8.css` in full. Grep it for specific class names only when NERDIT_LESSON_PROMPT_v8.md leaves the exact markup a component expects unclear
 
 If the orchestrator attached a sample `course-[chaptername]_output.json`, read it too for field ordering and tone reference (see the bundled reference pair in the skill's `references/` directory).
 
